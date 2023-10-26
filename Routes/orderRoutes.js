@@ -1,13 +1,20 @@
 import express from "express";
 
-import { getOrderById, getOrdersAll, postOrder, putOrderIsDelivered, putOrderIsPaid } from "../Controllers/order.controller.js";
+import {
+  getOrderById,
+  getOrderByLoginUser,
+  getOrdersAll,
+  postOrder,
+  putOrderChangeState,
+} from "../Controllers/order.controller.js";
+import { admin, protect } from "../Middleware/AuthMiddleware.js";
 
 const orderRoute = express.Router();
 
-orderRoute.get("/all", getOrdersAll);
-orderRoute.get("/:id", getOrderById)
-orderRoute.post("/", postOrder);
-orderRoute.put("/:id/pay", putOrderIsPaid);
-orderRoute.put("/:id/delivered", putOrderIsDelivered);
+orderRoute.get("/all", protect, admin, getOrdersAll);
+orderRoute.get("/", protect, getOrderByLoginUser);
+orderRoute.get("/:id", protect, getOrderById);
+orderRoute.post("/", protect, postOrder);
+orderRoute.put("/state", protect, admin, putOrderChangeState);
 
 export default orderRoute;

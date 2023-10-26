@@ -1,10 +1,15 @@
 import express from "express";
-import Subcategory from "../Models/subcategoryModel.js";
-import { getSubcategoryAll, postSubcategory } from "../Controllers/subcategory.controller.js";
+import {
+  getSubcategoriesByCategory,
+  getSubcategoryAll,
+  postSubcategory,
+} from "../Controllers/subcategory.controller.js";
+import { protect } from "../Middleware/AuthMiddleware.js";
 
 const subcategoryRoute = express.Router();
 
-subcategoryRoute.get("/all", getSubcategoryAll);
-subcategoryRoute.post("/", postSubcategory);
+subcategoryRoute.get("/all",protect, getSubcategoryAll);
+subcategoryRoute.get("/:id",protect, getSubcategoriesByCategory);
+subcategoryRoute.post("/",protect, postSubcategory);
 
 export default subcategoryRoute;

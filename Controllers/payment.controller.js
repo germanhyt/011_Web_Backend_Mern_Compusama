@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Payment from "../Models/paymentModel";
+import Payment from "../Models/paymentModel.js";
 
 export const getPaymentAll = asyncHandler(
     async (req, res) => {
@@ -17,9 +17,10 @@ export const getPaymentAll = asyncHandler(
 export const getPaymentByBilling = asyncHandler(
     async (req, res) => {
 
-        const payments = await Payment.find({ "id_billing": req.params.id_billing });
-
+        console.log("CCCC",req.params.id)
         try {
+            const payments = await Payment.findOne({ "id_billing": req.params.id});
+            // console.log("CCCC",payments)
             return res.status(201).json(payments);
 
         } catch (error) {

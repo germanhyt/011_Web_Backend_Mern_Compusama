@@ -88,22 +88,34 @@ const getProfileUser = asyncHandler(
 
 const putProfileUser = asyncHandler(
     async (req, res) => {
-        const user = User.findById(req.user._id);
+        const user = await User.findById(req.user._id);
+        // console.log(user);
+        const {email,name,lastname,phone,image}=req.body;
 
+        if(!name){
+            res.status(400).json({ error: 'Ingrese el nombre como mínimo' });
+        }
+        
         try {
-            user.name = req.body.name || user.name;
-            user.email = req.body.email || user.email;
-            user.created_at = user.created_at
+            user.name = name|| user.name;
+            user.email = email || user.email;
+            user.lastname=lastname || user.lastname;
+            user.phone=phone || user.phone;
+            user.image=image || user.image;
+            user.created_at = user.created_at;
 
             if (req.body.password) {
                 user.password = req.body.password;
             }
-
+            
             const updateUser = await user.save();
-            req.json({
+            res.json({
                 _id: updateUser._id,
                 email: updateUser.email,
                 name: updateUser.name,
+                lastname: updateUser.lastname,
+                phone: updateUser.phone,
+                image: updateUser.image,
                 created_at: updateUser.created_at,
                 updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
                 token: generateToken(updateUser._id),

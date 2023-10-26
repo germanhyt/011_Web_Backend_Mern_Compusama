@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Category from "../Models/categoryModel";
+import Category from "../Models/categoryModel.js";
 
 export const getCategoryAll = asyncHandler(
     async (req, res) => {
@@ -7,7 +7,7 @@ export const getCategoryAll = asyncHandler(
         try {
             const categories = await Category.find({}).sort({ _id: -1 });
 
-            res.status(201).json(categories);
+            return res.status(201).json(categories);
         } catch (error) {
             return res.status(500).json({ message: 'Error de Servidor', error: error.message });
         }

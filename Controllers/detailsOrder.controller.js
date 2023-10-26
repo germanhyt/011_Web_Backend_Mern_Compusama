@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import DetailsOrder from "../Models/detailsOrderModel";
+import DetailsOrder from "../Models/detailsOrderModel.js";
 
 export const getDetailsOrderAll = asyncHandler(
     async (req, res) => {
@@ -14,10 +14,14 @@ export const getDetailsOrderAll = asyncHandler(
     }
 );
 
-export const getDetailsOrder = asyncHandler(
+export const getDetailsOrderByOrder = asyncHandler(
     async (req, res) => {
 
-        const details = await DetailsOrder.findById(req.params.id);
+        const details = await DetailsOrder.find({"id_order":req.params.id});
+
+        if(!details){
+            return res.status(400).json({error: "No existe detalles de la orden"});
+        }
 
         try {
             return res.status(201).json(details);
@@ -30,11 +34,10 @@ export const getDetailsOrder = asyncHandler(
 
 export const postDetailsOrder = asyncHandler(
     async (req, res) => {
-
+        
         const { id_order, id_product, quantity } = req.body;
 
-
-        const new_details = new Payment({
+        const new_details = new DetailsOrder({
             id_order,
             id_product,
             quantity,

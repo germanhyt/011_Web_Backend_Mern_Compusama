@@ -1,11 +1,15 @@
 import asyncHandler from "express-async-handler";
-import Business from "../Models/businessModel";
+import Business from "../Models/businessModel.js";
 
 export const getBusinessAll = asyncHandler(
     async (req, res) => {
 
         try {
             const businesss = await Business.find({}).sort({ _id: -1 });
+
+            if(!businesss){
+                return res.status(400).json({error:'No hay registros de empresas'});
+            }
 
             res.status(201).json(businesss);
         } catch (error) {

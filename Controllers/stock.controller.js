@@ -17,7 +17,7 @@ export const getStockAll = asyncHandler(
 export const getStockByProduct = asyncHandler(
     async (req, res) => {
 
-        const stock = await Stock.findOne({ "id_product": req.params.id_product });
+        const stock = await Stock.findOne({ "id_product": req.params.id });
 
         try {
             return res.status(201).json(stock);

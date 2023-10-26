@@ -39,3 +39,4 @@ Desarrollo de Apis o EndPoints en base a las HU y Base de datos realizado.
 # Notas:
 - Agregar en el package.json el {"type": "module"}
 - Importar bien los módulos js con su extensión .js
+- El método populate se usa en el controlador en base modelos de datos con referencia entre una coleccción u otra, ojo esto en el marco de MVC

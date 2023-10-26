@@ -17,7 +17,8 @@ export const getRolesAll = asyncHandler(
 export const getRolesByUser = asyncHandler(
     async (req, res) => {
 
-        const roles = await Roles.find({ "id_user": req.params.id_user });
+        const roles = await Roles.find({ "id_user": req.params.id });
+        // console.log(roles);
 
         try {
             return res.status(201).json(roles);
@@ -29,32 +30,49 @@ export const getRolesByUser = asyncHandler(
 );
 
 
-export const postRoles = asyncHandler(
+export const  postRoles = asyncHandler(
     async (req, res) => {
 
-        const { name, description, image } = req.body;
+        const {id_user, name, description, image } = req.body;
         const rolesExist = await Roles.findOne({ "name": name });
 
         if (rolesExist) {
-            return res.status(400).json({ error: 'Ya existe roles con el mismo nombre' });
+            return res.status(400).json({message:'Ya existe roles para el usuario con el mismo nombre', error:error.message });
+        }
+
+        const new_Roles = new Roles({
+            id_user,
+            name,
+            description,
+            image,
+            created_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
+            updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' })
+        });
+
+        try {
+            const created_Roles = await new_Roles.save();
+            // console.log(created_Roles);
+            return res.status(201).json(created_Roles);
+        } catch (error) {
+            return res.status(400).json({ message: 'Data de Roles es inválido', error: error.message });
+        }
+
+
+    }
+);
+
+
+export const deleteRol = asyncHandler(
+
+    async (req, res) => {
+        const rolUser = await Roles.findById(req.params.id);
+
+        if (rolUser) {
+            await Roles.remove();
+
+            return res.json({ message: 'Rol eliminado' });
         } else {
-
-            const new_Roles = new Roles({
-                name,
-                description,
-                image,
-                created_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
-                updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' })
-            });
-
-            try {
-                const created_Roles = await new_Roles.save();
-
-                return res.status(201).json(created_Roles);
-            } catch (error) {
-                return res.status(400).json({ message: 'Data de Roles es inválido', error: error.message });
-            }
-
+            return res.status(404).json({ error: 'Rol Not Found' });
         }
     }
 );

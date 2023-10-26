@@ -17,7 +17,7 @@ export const getSubcategoryAll = asyncHandler(
 export const getSubcategoriesByCategory = asyncHandler(
     async (req, res) => {
 
-        const subcategories = await Subcategory.find({ "id_category": req.params.id_category });
+        const subcategories = await Subcategory.find({ "id_category": req.params.id });
         
         try {
             return res.status(201).json(subcategories);
@@ -32,30 +32,30 @@ export const getSubcategoriesByCategory = asyncHandler(
 export const postSubcategory = asyncHandler(
     async (req, res) => {
 
-        const { name, description, discount, image } = req.body;
+        const { id_category,name, description, discount, image } = req.body;
         const SubcategoryExist = await Subcategory.findOne({ "name": name });
 
         if (SubcategoryExist) {
             return res.status(400).json({ error: 'Ya existe una Subcategory con el mismo nombre' });
-        } else {
-
-            const new_Subcategory = new Subcategory({
-                name,
-                description,
-                discount,
-                image,
-                created_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
-                updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' })
-            });
-
-            try {
-                const created_Subcategory = await new_Subcategory.save();
-
-                return res.status(201).json(created_Subcategory);
-            } catch (error) {
-                return res.status(400).json({ message: 'Data de Subcategory es inválido', error: error.message });
-            }
-
         }
+
+        const new_Subcategory = new Subcategory({
+            id_category,
+            name,
+            description,
+            discount,
+            image,
+            created_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
+            updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' })
+        });
+
+        try {
+            const created_Subcategory = await new_Subcategory.save();
+
+            return res.status(201).json(created_Subcategory);
+        } catch (error) {
+            return res.status(400).json({ message: 'Data de Subcategory es inválido', error: error.message });
+        }
+
     }
 );

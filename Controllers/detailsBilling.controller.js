@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import DetailsBilling from "../Models/detailsBillingModel";
+import DetailsBilling from "../Models/detailsBillingModel.js";
 
 
 export const getDetailsBillingAll = asyncHandler(
@@ -18,10 +18,10 @@ export const getDetailsBillingAll = asyncHandler(
 export const getDetailsByBilling = asyncHandler(
     async (req, res) => {
 
-        const details = await DetailsBilling.find({ "id_billing": req.params.id_billing });
+        const detailsByBilling = await DetailsBilling.find({ "id_billing": req.params.idBilling });
 
         try {
-            return res.status(201).json(details);
+            return res.status(201).json(detailsByBilling);
 
         } catch (error) {
             return res.status(400).json({ message: 'No hay Details para el Billing', error: error.message });
@@ -29,27 +29,13 @@ export const getDetailsByBilling = asyncHandler(
     }
 );
 
-export const getDetailsByProduct = asyncHandler(
-    async (req, res) => {
-
-        const details = await DetailsBilling.find({ "id_product": req.params.id_product });
-
-        try {
-            return res.status(201).json(details);
-
-        } catch (error) {
-            return res.status(400).json({ message: 'No hay Details para el Billing', error: error.message });
-        }
-    }
-);
 
 export const postDetailsBilling = asyncHandler(
     async (req, res) => {
 
         const { id_billing, id_product, quantity, price } = req.body;
 
-
-        const new_details = new Payment({
+        const new_details = new DetailsBilling({
             id_billing,
             id_product,
             quantity,

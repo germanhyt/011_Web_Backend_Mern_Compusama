@@ -8,6 +8,7 @@ const protect = asyncHandler(
 
         let token;
 
+        //Verificamos si se está envía en los header la auth en base a Bearer
         if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
             try {
                 // console.log(req.headers.authorization);
@@ -35,16 +36,23 @@ const protect = asyncHandler(
     }
 );
 
-const admin = (req, res, next) => {
+const admin = async (req, res, next) => {
 
-    const roles = Roles.findOne({ _id: req.user.id });
+    // Verificamos el que usuario tenga un rol Administrador
+    const roles = await Roles.find({ id_user: req.user.id });
 
-    if (req.user && roles.name == "Administrador") {
+    let isAdmin=false;
+    for (const rol of roles) {
+        if(rol.name === "Administrador"){
+            isAdmin=true;
+        }
+    }
+    
+    if (req.user && isAdmin ) {
         next();
     } else {
-        res.status(401);
-        throw new Error('No autorizado, ya que no es admin');
-    }
+         res.status(401).json({message:'No autorizado, ya que no es admin'});
+     }
 }
 
 export { protect, admin }

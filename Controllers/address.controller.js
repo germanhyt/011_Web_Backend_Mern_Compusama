@@ -19,7 +19,7 @@ export const getAddressAll = asyncHandler(
 export const getAddressByUser = asyncHandler(
     async (req, res) => {
 
-        const addresses = await Address.find({ "id_user": req.params.id_user });
+        const addresses = await Address.find({ "id_user": req.params.id });
 
         try {
             return res.status(201).json(addresses);
@@ -31,36 +31,36 @@ export const getAddressByUser = asyncHandler(
 );
 
 
-export const postAddress = asyncHandler(
+ export const postAddress = asyncHandler(
     async (req, res) => {
-
-        const { address, street, street_number, floor, deparment, province, district } = req.body;
+        
+        const { address, street, street_number, floor, department, province, district } = req.body;
+       
         const addressExist = await Address.findOne({ "address": address });
         if (addressExist) {
-            return res.status(400).json({ error: 'Ya existe una dirección con el mismo nombre' });
-        } else {
+            return res.status(400).json({ error: 'Ya existe una dirección con el mismo nombre'});
+        } 
+        
+        const new_address = new Address({
+            id_user: req.user._id,
+            address, 
+            street,
+            street_number,
+            floor,
+            department,
+            province,
+            district,
+            created_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
+            updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' })
+        });
+ 
+        try {
+            const created_address = await new_address.save();
 
-            const new_address = new Address({
-                id_user: req.user._id,
-                address, street,
-                street_number,
-                floor,
-                deparment,
-                province,
-                district,
-                created_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' }),
-                updated_at: new Date().toLocaleString('es-PE', { timeZone: 'America/Lima' })
-            });
-
-            try {
-                const created_address = await new_address.save();
-                // console.log("aaaaaaaaaaaa")
-
-                return res.status(201).json(created_address);
-            } catch (error) {
-                return res.status(400).json({ message: 'Data de address es inválido', error: error.message });
-            }
-
+            return res.status(201).json(created_address);
+        } catch (error) {
+            return res.status(400).json({ message: 'Data de address es inválido', error: error.message });
         }
+
     }
 );

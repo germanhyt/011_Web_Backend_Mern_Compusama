@@ -39,7 +39,6 @@ const postBrand = asyncHandler(
             } catch (error) {
                 return res.status(400).json({ message: 'Data de Brand es inválido', error: error.message });
             }
-
         }
     }
 );

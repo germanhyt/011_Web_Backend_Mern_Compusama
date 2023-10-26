@@ -123,13 +123,13 @@ const putProduct = asyncHandler(
 
     async (req, res) => {
 
-        const { id_subcategory, id_brand, code, name, description, price, stock_minimun, discount, image1, image2, image3 } = req.body;
+        const {_id, id_subcategory, id_brand, code, name, description, price, stock_minimun, discount, image1, image2, image3 } = req.body;
 
-        const product = await Product.findById(req.params.id);
+        const product = await Product.findById(_id);
 
         if (!product) {
             return res.status(404).json({ error: 'Product Not Found' });
-        } else {
+        } 
 
             product.id_subcategory = id_subcategory || product.id_subcategory;
             product.id_brand = id_brand || product.id_brand;
@@ -152,7 +152,6 @@ const putProduct = asyncHandler(
             } catch (error) {
                 return res.status(400).json({ error: 'Data del producto es inválido', error: error.message });
             }
-        }
 
     }
 );
